@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/word_service.dart';
+import '../models/word.dart';
 import 'learn_screen.dart';
 import 'test_screen.dart';
 import 'edit_screen.dart';
@@ -12,6 +13,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final WordService wordService = WordService();
+  String _searchQuery = '';
 
   void _refreshWords() {
     setState(() {});
@@ -41,11 +43,37 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  List<Word> getFilteredWords() {
+    return wordService.getWords().where((word) =>
+        word.word.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+        word.translation.toLowerCase().contains(_searchQuery.toLowerCase())).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Изучение слов'),
+        title: Row(
+          children: [
+            Text('Изучение слов'), // Заголовок
+            SizedBox(width: 10), // Отступ между заголовком и полем поиска
+            Expanded(
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'Поиск...',
+                  border: InputBorder.none,
+                  hintStyle: TextStyle(color: Colors.white70),
+                ),
+                style: TextStyle(color: Colors.white),
+                onChanged: (value) {
+                  setState(() {
+                    _searchQuery = value;
+                  });
+                },
+              ),
+            ),
+          ],
+        ),
         actions: [
           IconButton(
             onPressed: () {
@@ -61,9 +89,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: ListView.builder(
-        itemCount: wordService.getWords().length,
+        itemCount: getFilteredWords().length,
         itemBuilder: (context, index) {
-          final word = wordService.getWords()[index];
+          final word = getFilteredWords()[index];
           return Card(
             margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
