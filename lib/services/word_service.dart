@@ -1,4 +1,4 @@
-import '../models/word.dart'; // Добавьте эту строку
+import '../models/word.dart';
 
 class WordService {
   List<Word> words = [];
@@ -12,7 +12,7 @@ class WordService {
   }
 
   void deleteWord(int index) {
-    words.removeAt(index); // Удаляем слово по индексу
+    words.removeAt(index);
   }
 
   List<Word> getWords() {

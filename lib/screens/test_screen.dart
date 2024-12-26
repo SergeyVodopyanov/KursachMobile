@@ -16,12 +16,10 @@ class _TestScreenState extends State<TestScreen> {
   int totalQuestions = 0;
   bool isTestFinished = false;
 
-  // Массив из 200 случайных русских слов
   final List<String> russianWords = [
     'дом', 'кот', 'солнце', 'вода', 'дерево', 'книга', 'город', 'машина', 'цветок', 'друг',
     'школа', 'работа', 'время', 'деньги', 'жизнь', 'мир', 'любовь', 'счастье', 'музыка', 'искусство',
     'путешествие', 'мечта', 'звезда', 'океан', 'гора', 'лес', 'птица', 'рыба', 'собака', 'кофе',
-    // Укороченный список для примера
   ];
 
   void _showNextWord() {
@@ -41,6 +39,7 @@ class _TestScreenState extends State<TestScreen> {
   void _checkAnswer(String selectedOption) {
     if (selectedOption == widget.wordService.getWords()[currentIndex].translation) {
       correctAnswers++;
+      widget.wordService.markAsLearned(currentIndex); // Отмечаем слово как изученное
     }
     _showNextWord();
   }
@@ -49,7 +48,6 @@ class _TestScreenState extends State<TestScreen> {
     final correctAnswer = widget.wordService.getWords()[currentIndex].translation;
     final options = [correctAnswer];
 
-    // Добавляем два случайных слова из массива русских слов
     while (options.length < 3) {
       final randomWord = russianWords[(DateTime.now().millisecondsSinceEpoch % russianWords.length)];
       if (!options.contains(randomWord)) {
@@ -57,7 +55,7 @@ class _TestScreenState extends State<TestScreen> {
       }
     }
 
-    options.shuffle(); // Перемешиваем варианты
+    options.shuffle();
     return options;
   }
 
@@ -113,7 +111,7 @@ class _TestScreenState extends State<TestScreen> {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
-                    minimumSize: Size(200, 40), // Устанавливаем минимальный размер кнопок
+                    minimumSize: Size(200, 40),
                   ),
                   onPressed: () => _checkAnswer(option),
                   child: Text(
