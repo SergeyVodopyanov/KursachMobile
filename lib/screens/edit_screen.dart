@@ -14,6 +14,7 @@ class EditScreen extends StatefulWidget {
 class _EditScreenState extends State<EditScreen> {
   final TextEditingController wordController = TextEditingController();
   final TextEditingController translationController = TextEditingController();
+  String selectedCategory = 'Без категории';
 
   @override
   void initState() {
@@ -21,6 +22,7 @@ class _EditScreenState extends State<EditScreen> {
     final word = widget.wordService.getWords()[widget.index];
     wordController.text = word.word;
     translationController.text = word.translation;
+    selectedCategory = word.category;
   }
 
   @override
@@ -41,11 +43,26 @@ class _EditScreenState extends State<EditScreen> {
               controller: translationController,
               decoration: InputDecoration(labelText: 'Перевод'),
             ),
+            DropdownButton<String>(
+              value: selectedCategory,
+              onChanged: (value) {
+                setState(() {
+                  selectedCategory = value!;
+                });
+              },
+              items: widget.wordService.getCategories().map((category) {
+                return DropdownMenuItem(
+                  value: category,
+                  child: Text(category),
+                );
+              }).toList(),
+            ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 widget.wordService.getWords()[widget.index].word = wordController.text;
                 widget.wordService.getWords()[widget.index].translation = translationController.text;
+                widget.wordService.getWords()[widget.index].category = selectedCategory;
                 Navigator.pop(context);
               },
               child: Text('Сохранить'),

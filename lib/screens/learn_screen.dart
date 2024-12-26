@@ -13,6 +13,7 @@ class LearnScreen extends StatefulWidget {
 class _LearnScreenState extends State<LearnScreen> {
   final TextEditingController wordController = TextEditingController();
   final TextEditingController translationController = TextEditingController();
+  String selectedCategory = 'Без категории';
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +33,28 @@ class _LearnScreenState extends State<LearnScreen> {
               controller: translationController,
               decoration: InputDecoration(labelText: 'Перевод'),
             ),
+            DropdownButton<String>(
+              value: selectedCategory,
+              onChanged: (value) {
+                setState(() {
+                  selectedCategory = value!;
+                });
+              },
+              items: widget.wordService.getCategories().map((category) {
+                return DropdownMenuItem(
+                  value: category,
+                  child: Text(category),
+                );
+              }).toList(),
+            ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                widget.wordService.addWord(wordController.text, translationController.text);
+                widget.wordService.addWord(
+                  wordController.text,
+                  translationController.text,
+                  category: selectedCategory,
+                );
                 Navigator.pop(context);
               },
               child: Text('Добавить'),
