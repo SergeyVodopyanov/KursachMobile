@@ -30,21 +30,30 @@ class _HomeScreenState extends State<HomeScreen> {
         itemCount: wordService.getWords().length,
         itemBuilder: (context, index) {
           final word = wordService.getWords()[index];
-          return ListTile(
-            title: Text(word.word),
-            subtitle: Text(word.translation),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  icon: Icon(Icons.delete, color: Colors.red),
-                  onPressed: () => _deleteWord(index),
-                ),
-                Icon(
-                  word.isLearned ? Icons.check : Icons.close,
-                  color: word.isLearned ? Colors.green : Colors.red,
-                ),
-              ],
+          return Card(
+            margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+            elevation: 4,
+            child: ListTile(
+              title: Text(word.word, style: TextStyle(fontWeight: FontWeight.bold)),
+              subtitle: Text(word.translation),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  InkWell(
+                    onTap: () => _deleteWord(index),
+                    borderRadius: BorderRadius.circular(15),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(Icons.delete, color: Colors.red),
+                    ),
+                  ),
+                  Icon(
+                    word.isLearned ? Icons.check : Icons.close,
+                    color: word.isLearned ? Colors.green : Colors.red,
+                  ),
+                ],
+              ),
             ),
           );
         },
@@ -53,6 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
+            heroTag: 'learnButton',
             onPressed: () async {
               await Navigator.push(
                 context,
@@ -62,15 +72,16 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             child: Icon(Icons.add),
           ),
-          SizedBox(height: 16), // Отступ между кнопками
+          SizedBox(height: 16),
           FloatingActionButton(
+            heroTag: 'testButton',
             onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => TestScreen(wordService: wordService)),
               );
             },
-            child: Icon(Icons.quiz), // Иконка для тестирования
+            child: Icon(Icons.quiz),
           ),
         ],
       ),

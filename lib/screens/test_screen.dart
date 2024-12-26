@@ -21,19 +21,7 @@ class _TestScreenState extends State<TestScreen> {
     'дом', 'кот', 'солнце', 'вода', 'дерево', 'книга', 'город', 'машина', 'цветок', 'друг',
     'школа', 'работа', 'время', 'деньги', 'жизнь', 'мир', 'любовь', 'счастье', 'музыка', 'искусство',
     'путешествие', 'мечта', 'звезда', 'океан', 'гора', 'лес', 'птица', 'рыба', 'собака', 'кофе',
-    'чай', 'хлеб', 'молоко', 'яблоко', 'банан', 'апельсин', 'помидор', 'картошка', 'морковь', 'лук',
-    'сахар', 'соль', 'перец', 'масло', 'сыр', 'мясо', 'рыба', 'суп', 'салат', 'десерт',
-    'завтрак', 'обед', 'ужин', 'ночь', 'утро', 'вечер', 'зима', 'весна', 'лето', 'осень',
-    'погода', 'дождь', 'снег', 'ветер', 'туча', 'радуга', 'гроза', 'молния', 'температура', 'холод',
-    'тепло', 'жарко', 'прохладно', 'свет', 'тьма', 'огонь', 'вода', 'воздух', 'земля', 'камень',
-    'песок', 'глина', 'металл', 'золото', 'серебро', 'бронза', 'железо', 'сталь', 'алмаз', 'рубин',
-    'изумруд', 'сапфир', 'платина', 'нефть', 'газ', 'уголь', 'дерево', 'бумага', 'стекло', 'пластик',
-    'резина', 'кожа', 'ткань', 'шерсть', 'шелк', 'хлопок', 'лен', 'шёлк', 'мех', 'пух',
-    'перо', 'кость', 'рог', 'клык', 'кожа', 'волос', 'ногть', 'кровь', 'сердце', 'легкое',
-    'печень', 'желудок', 'кишечник', 'мозг', 'нерв', 'мышца', 'кость', 'сустав', 'кожа', 'глаз',
-    'ухо', 'нос', 'рот', 'зуб', 'язык', 'губа', 'щека', 'лоб', 'подбородок', 'шея',
-    'плечо', 'рука', 'локоть', 'запястье', 'ладонь', 'палец', 'ногть', 'грудь', 'живот', 'спина',
-    'поясница', 'бедро', 'колено', 'нога', 'ступня', 'пятка', 'палец', 'волос', 'кожа', 'кость',
+    // Укороченный список для примера
   ];
 
   void _showNextWord() {
@@ -63,7 +51,7 @@ class _TestScreenState extends State<TestScreen> {
 
     // Добавляем два случайных слова из массива русских слов
     while (options.length < 3) {
-      final randomWord = russianWords[(DateTime.now().millisecondsSinceEpoch % 200)];
+      final randomWord = russianWords[(DateTime.now().millisecondsSinceEpoch % russianWords.length)];
       if (!options.contains(randomWord)) {
         options.add(randomWord);
       }
@@ -84,7 +72,11 @@ class _TestScreenState extends State<TestScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Правильных ответов: $correctAnswers из 15', style: TextStyle(fontSize: 24)),
+              Text(
+                'Правильных ответов: $correctAnswers из 15',
+                style: TextStyle(fontSize: 24),
+                textAlign: TextAlign.center,
+              ),
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
@@ -105,18 +97,45 @@ class _TestScreenState extends State<TestScreen> {
       appBar: AppBar(
         title: Text('Тестирование'),
       ),
-      body: Column(
-        children: [
-          Text(word.word, style: TextStyle(fontSize: 24)),
-          ...options.map((option) {
-            return ElevatedButton(
-              onPressed: () => _checkAnswer(option),
-              child: Text(option),
-            );
-          }).toList(),
-          Text('Вопрос ${totalQuestions + 1} из 15'),
-          Text('Правильных ответов: $correctAnswers'),
-        ],
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              word.word,
+              style: TextStyle(fontSize: 24),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 20),
+            ...options.map((option) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    minimumSize: Size(200, 40), // Устанавливаем минимальный размер кнопок
+                  ),
+                  onPressed: () => _checkAnswer(option),
+                  child: Text(
+                    option,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              );
+            }).toList(),
+            SizedBox(height: 20),
+            Text(
+              'Вопрос ${totalQuestions + 1} из 15',
+              style: TextStyle(fontSize: 16),
+              textAlign: TextAlign.center,
+            ),
+            Text(
+              'Правильных ответов: $correctAnswers',
+              style: TextStyle(fontSize: 16),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }
