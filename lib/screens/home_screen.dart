@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/word_service.dart';
 import 'learn_screen.dart';
 import 'test_screen.dart';
+import 'edit_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -17,6 +18,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _deleteWord(int index) {
     wordService.deleteWord(index);
+    _refreshWords();
+  }
+
+  void _editWord(int index) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditScreen(
+          wordService: wordService,
+          index: index,
+        ),
+      ),
+    );
     _refreshWords();
   }
 
@@ -41,16 +55,20 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   InkWell(
+                    onTap: () => _editWord(index),
+                    borderRadius: BorderRadius.circular(15),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(Icons.edit, color: Colors.blue),
+                    ),
+                  ),
+                  InkWell(
                     onTap: () => _deleteWord(index),
                     borderRadius: BorderRadius.circular(15),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Icon(Icons.delete, color: Colors.red),
                     ),
-                  ),
-                  Icon(
-                    word.isLearned ? Icons.check : Icons.close,
-                    color: word.isLearned ? Colors.green : Colors.red,
                   ),
                 ],
               ),

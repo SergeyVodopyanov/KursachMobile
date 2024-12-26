@@ -1,6 +1,6 @@
 class Word {
-  final String word;
-  final String translation;
+  String word; // Убрали final
+  String translation; // Убрали final
   bool isLearned;
 
   Word({
